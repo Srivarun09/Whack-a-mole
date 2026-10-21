@@ -1,6 +1,6 @@
 import sys
 import random 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel
 
 
 class MyFirstWindow(QMainWindow):
@@ -13,6 +13,8 @@ class MyFirstWindow(QMainWindow):
         self.grid_box = QGridLayout()
         self.buttons = []
 
+        self.score = 0
+
         self.create_gridbox()
         self.place_mole()
 
@@ -20,6 +22,9 @@ class MyFirstWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         central_widget.setLayout(self.grid_box)
 
+        self.score_label = QLabel("Score: 0", central_widget)
+        self.score_label.setGeometry(5, 0, 100, 20)
+    
     def create_gridbox(self):
         for row in range(4):
             row_buttons = []
@@ -43,6 +48,9 @@ class MyFirstWindow(QMainWindow):
         if row == self.mole_row and column == self.mole_col:
             print("Mole clicked!")
 
+            self.score = self.score + 1
+            self.score_label.setText("Score: " + str(self.score))
+
             self.buttons[self.mole_row][self.mole_col].setText("")
 
             self.place_mole()
@@ -52,3 +60,5 @@ app = QApplication(sys.argv)
 window = MyFirstWindow()
 window.show()
 sys.exit(app.exec())
+
+
