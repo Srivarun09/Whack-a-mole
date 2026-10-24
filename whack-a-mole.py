@@ -1,6 +1,7 @@
 import sys
 import random 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel
+from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QGridLayout, QWidget, QLabel, QInputDialog, QMessageBox
+from PyQt6.QtCore import QTimer
 
 
 class MyFirstWindow(QMainWindow):
@@ -24,6 +25,11 @@ class MyFirstWindow(QMainWindow):
 
         self.score_label = QLabel("Score: 0", central_widget)
         self.score_label.setGeometry(5, 0, 100, 20)
+
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.end_game)
+        self.timer.start(self.duration * 1000)
     
     def create_gridbox(self):
         for row in range(4):
@@ -54,6 +60,13 @@ class MyFirstWindow(QMainWindow):
             self.buttons[self.mole_row][self.mole_col].setText("")
 
             self.place_mole()
+
+    def end_game(self):
+        for row in self.buttons:
+            for button in row:
+                button.setEnabled(False)
+
+        QMessageBox.information(self,"Game Over","Time is up! Your score is " + str(self.score))
 
 
 app = QApplication(sys.argv)
