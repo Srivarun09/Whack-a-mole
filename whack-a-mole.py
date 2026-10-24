@@ -68,6 +68,31 @@ class MyFirstWindow(QMainWindow):
 
         QMessageBox.information(self,"Game Over","Time is up! Your score is " + str(self.score))
 
+app = QApplication(sys.argv)
+
+while True:
+    input_box = QInputDialog()
+    input_box.setWindowTitle("Game Duration")
+    input_box.setLabelText("Please enter a duration in seconds:")
+    input_box.setFixedSize(400, 400)
+
+    if input_box.exec():
+        duration = input_box.textValue()
+    else:
+        sys.exit()
+
+    try:
+        duration = int(duration)
+
+        if 15 <= duration <= 60:
+            break
+        else:
+            QMessageBox.warning("Invalid Duration","Please enter a time between 15-60 secs.")
+            
+
+    except ValueError:
+        QMessageBox.warning("Invalid Duration","Please enter a time between 15-60 secs.")
+
 
 app = QApplication(sys.argv)
 window = MyFirstWindow()
