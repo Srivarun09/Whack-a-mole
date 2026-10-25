@@ -5,12 +5,13 @@ from PyQt6.QtCore import QTimer
 
 
 class MyFirstWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, duration):
         super().__init__()
 
         self.setWindowTitle("Whack-a-mole")
         self.setFixedSize(400, 400)
 
+        self.duration = duration
         self.grid_box = QGridLayout()
         self.buttons = []
 
@@ -25,6 +26,14 @@ class MyFirstWindow(QMainWindow):
 
         self.score_label = QLabel("Score: 0", central_widget)
         self.score_label.setGeometry(5, 0, 100, 20)
+
+        self.time_label = QLabel("Time: " + str(self.duration) + "s", central_widget)
+        self.time_label.setGeometry(345, 0, 100, 20)
+
+        self.time_left = self.duration
+        self.countdown_timer = QTimer()
+        self.countdown_timer.timeout.connect(self.update_timer)
+        self.countdown_timer.start(1000)
 
         self.timer = QTimer()
         self.timer.setSingleShot(True)
@@ -61,7 +70,12 @@ class MyFirstWindow(QMainWindow):
 
             self.place_mole()
 
+    def update_timer(self):
+        self.time_left = self.time_left - 1
+        self.time_label.setText("Time: " + str(self.time_left) + "s")
+
     def end_game(self):
+        self.countdown_timer.stop()
         for row in self.buttons:
             for button in row:
                 button.setEnabled(False)
@@ -80,22 +94,18 @@ while True:
         duration = input_box.textValue()
     else:
         sys.exit()
-
     try:
         duration = int(duration)
 
         if 15 <= duration <= 60:
             break
         else:
-            QMessageBox.warning("Invalid Duration","Please enter a time between 15-60 secs.")
+            QMessageBox.warning(None,"Invalid Duration","Please enter a time between 15-60 secs.")
             
-
     except ValueError:
-        QMessageBox.warning("Invalid Duration","Please enter a time between 15-60 secs.")
+        QMessageBox.warning(None,"Invalid Duration","Please enter a time between 15-60 secs.")
 
-
-app = QApplication(sys.argv)
-window = MyFirstWindow()
+window = MyFirstWindow(duration)
 window.show()
 sys.exit(app.exec())
 
